@@ -25,4 +25,4 @@ Allow: /
 
 User-agent: *
 Allow: /
-Sitemap: https://delaneyavebright-star.github.io/stoke-and-steam/sitemap.xml
+Sitemap: https://www.stokeandsteam.com.au/sitemap.xml
