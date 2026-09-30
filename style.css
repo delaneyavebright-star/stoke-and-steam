@@ -1,0 +1,380 @@
+/* Stoke and Steam information site. One stylesheet, no external requests, no web fonts.
+   Spec: site/DESIGN.md, taste run 24 Sep 2026. Phone width first; wider layouts from 40rem and 60rem. */
+
+:root {
+  --bg: #f6f5f0;          /* warm off-white page */
+  --surface: #ffffff;
+  --band: #e4e9e3;        /* pale sage band */
+  --text: #2b2926;        /* warm charcoal */
+  --muted: #5f655f;       /* grey-green, 5.4:1 on --bg */
+  --fir: #4f6357;         /* deep sage: buttons, header rule, markers (6.4:1 with white) */
+  --fir-deep: #3f5046;    /* hover and links */
+  --sage: #9aa89c;        /* mid sage: decoration only, never text */
+  --line: #d8dcd6;
+  --on-fir: #ffffff;
+  --ph-a: #e6ebe5;        /* placeholder hatch */
+  --ph-b: #dde3dc;
+  --ph-text: #3f5046;
+  --focus: #2b2926;
+  --band-deep: #3f5046;
+  --on-band-deep: #f6f5f0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1d1b;
+    --surface: #232725;
+    --band: #252b28;
+    --text: #e6e8e3;
+    --muted: #aeb6ae;
+    --fir: #a3b8a8;
+    --fir-deep: #c2d3c6;
+    --sage: #5d6b60;
+    --line: #38403a;
+    --on-fir: #14201a;
+    --ph-a: #262b28;
+    --ph-b: #2c332e;
+    --ph-text: #c2d3c6;
+    --focus: #e6e8e3;
+    --band-deep: #2c3a31;
+    --on-band-deep: #e6e8e3;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+  overflow-x: clip;   /* the full-bleed hero reaches the viewport edge without a horizontal scroll */
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Type */
+h1 {
+  font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+  font-weight: 400;
+  font-size: clamp(2.1rem, 1.45rem + 2.2vw, 2.6rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 2rem 0 1rem;
+  text-wrap: balance;
+}
+h2 {
+  font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 1.25rem + 0.9vw, 1.85rem);
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  margin: clamp(2.75rem, 2rem + 2vw, 3.75rem) 0 0.75rem;
+  text-wrap: balance;
+  color: var(--text);
+}
+
+p, ul, dl { margin: 0 0 1.1rem; max-width: 40rem; }
+p { text-wrap: pretty; }
+ul { padding-left: 1.2rem; }
+li { margin-bottom: 0.45rem; }
+li::marker { color: var(--fir); }
+
+a { color: var(--fir-deep); text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.skip {
+  position: absolute;
+  left: -999rem;
+  top: 0;
+  background: var(--surface);
+  color: var(--text);
+  padding: 0.5rem 1rem;
+  z-index: 10;
+}
+.skip:focus { left: 0.5rem; top: 0.5rem; }
+
+/* Header: one row from 60rem (wordmark, nav, button). Below that the wordmark and the
+   button share the first row and the nav wraps beneath. DOM order: wordmark, nav, button. */
+.site-header { background: var(--surface); border-top: 4px solid var(--fir); border-bottom: 1px solid var(--line); }
+.header-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 1rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.5rem;
+}
+.logo {
+  font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+.header-inner nav { flex-basis: 100%; order: 2; }
+.header-inner .cta-small { order: 1; margin-left: auto; }
+nav ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.25rem;
+  padding: 0;
+  margin: 0;
+  max-width: none;
+}
+nav li { margin: 0; }
+nav a {
+  display: inline-block;
+  padding: 0.6rem 0;
+  min-height: 2.75rem;
+  color: var(--text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+nav a:hover { border-bottom-color: var(--sage); }
+nav a[aria-current="page"] { border-bottom-color: var(--fir); }
+
+/* Booking call to action */
+.cta {
+  display: inline-block;
+  padding: 0.9rem 1.5rem;
+  background: var(--fir);
+  color: var(--on-fir);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-align: center;
+  border-radius: 2px;
+}
+.cta:hover { background: var(--fir-deep); text-decoration: none; }
+.cta:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.cta-small { padding: 0.55rem 0.8rem; font-size: 0.74rem; letter-spacing: 0.05em; }
+.cta-box {
+  margin: 3.5rem 0 1rem;
+  padding: 2.5rem 1.25rem;
+  background: var(--band-deep);
+  color: var(--on-band-deep);
+  border-radius: 2px;
+  text-align: center;
+}
+.cta-box p { max-width: 34rem; margin-left: auto; margin-right: auto; }
+.cta-box p:last-child { margin-bottom: 0; }
+.cta-box .cta { background: var(--on-band-deep); color: var(--band-deep); }
+.cta-box .cta:hover { background: #ffffff; }
+.cta-box .cta:focus-visible { outline-color: var(--on-band-deep); }
+.also, .note { color: var(--muted); font-size: 0.95rem; }
+
+/* Hero: text and the sauna photo. Photo first and full-bleed below 60rem; side by side from 60rem. */
+section.hero { display: flex; flex-direction: column; }
+.hero .photo.hero {
+  order: -1;
+  position: relative;
+  margin: 0 calc(50% - 50vw) 1.75rem;
+}
+.hero .photo.hero img, .hero .photo.hero .ph {
+  aspect-ratio: 3 / 2;
+  max-height: min(34rem, 48vh);
+  border-radius: 0;
+}
+.hero .photo.hero .ph {
+  background: linear-gradient(180deg, var(--ph-a), var(--ph-b));
+}
+.hero .photo.hero figcaption {   /* the placeholder label or the photo names the slot; keep the caption for readers */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.hero h1 { margin-top: 0; }
+.lead { font-size: clamp(1.125rem, 1rem + 0.5vw, 1.25rem); line-height: 1.55; max-width: 38rem; }
+.hero-action { margin: 0.5rem 0 0; }
+
+/* Feature strip: the six counted facts, sauna first. Serif numeral and a plain label; no icons. */
+.facts {
+  list-style: none;
+  max-width: none;
+  padding: 1.25rem 0;
+  margin: 1.5rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem 1rem;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.facts li { margin: 0; display: flex; align-items: baseline; gap: 0.5rem; }
+.fact-n {
+  font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+  font-size: 1.75rem;
+  line-height: 1;
+}
+.fact-l { color: var(--muted); font-size: 0.9rem; line-height: 1.3; }
+
+/* Photos and placeholders */
+.photo { margin: 1.5rem 0; }
+.photo img, .ph {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  border-radius: 2px;
+}
+.photo img { object-fit: cover; height: auto; }
+.photo.wide img, .photo.wide .ph { aspect-ratio: 16 / 10; }
+.photo.panorama img, .photo.panorama .ph { aspect-ratio: 16 / 9; } /* for 16:9 sources only */
+.ph {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--ph-text);
+  background: repeating-linear-gradient(-45deg, var(--ph-a) 0 6px, var(--ph-b) 6px 12px);
+}
+.ph::after {
+  content: "";
+  position: absolute;
+  inset: 0.75rem;
+  border: 1px solid var(--sage);
+  pointer-events: none;
+}
+.ph-label {
+  position: relative;
+  padding: 0.5rem 0.9rem;
+  background: var(--surface);
+  color: var(--ph-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  max-width: 90%;
+}
+figcaption { margin-top: 0.5rem; color: var(--muted); font-size: 0.9rem; }
+.photo-row { display: grid; gap: 0 1.25rem; grid-template-columns: 1fr; }
+
+/* Seasons */
+.seasons dt { margin-top: 1.25rem; font-size: 1rem; font-weight: 600; color: var(--text); }
+.seasons dd { margin: 0.25rem 0 0; }
+
+/* FAQ accordion: native details, no script */
+.faq { margin-top: 1.5rem; border-top: 1px solid var(--line); }
+.faq-item { border-bottom: 1px solid var(--line); }
+.faq-item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+  cursor: pointer;
+  list-style: none;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after {
+  content: "";
+  flex: none;
+  width: 0.6rem;
+  height: 0.6rem;
+  margin-right: 0.35rem;
+  border-right: 2px solid var(--fir);
+  border-bottom: 2px solid var(--fir);
+  transform: rotate(45deg);
+}
+.faq-item[open] summary::after { transform: rotate(-135deg); }
+.faq-item summary h2 {
+  font-family: ui-serif, Georgia, "Times New Roman", Times, serif;
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.faq-item summary h2::before { display: none; }
+.faq-item summary:hover h2 { color: var(--fir-deep); }
+.faq-item p { margin: 0 2rem 1rem 0; }
+
+/* Footer: pale sage band with the owner disclosure */
+.site-footer {
+  margin-top: 4rem;
+  padding: 2.5rem 0 3rem;
+  background: var(--band);
+  border-top: 1px solid var(--line);
+  font-size: 0.95rem;
+}
+.footer-inner { display: grid; gap: 1.5rem; }
+.footer-inner p:last-child { margin-bottom: 0; }
+
+@media (min-width: 40rem) {
+  .logo { font-size: 1.35rem; }
+  .cta-small { padding: 0.6rem 1rem; font-size: 0.78rem; letter-spacing: 0.1em; }
+  .hero .photo.hero img, .hero .photo.hero .ph { aspect-ratio: 16 / 9; }
+  .facts { grid-template-columns: repeat(3, 1fr); }
+  .photo-row { grid-template-columns: 1fr 1fr; }
+  .cta-box { padding: 3rem 2rem; }
+  .footer-inner { grid-template-columns: 3fr 2fr; gap: 3rem; }
+}
+
+@media (min-width: 60rem) {
+  .wrap { max-width: 52rem; }
+  .header-inner { max-width: 74rem; gap: 0 2rem; padding-top: 0.75rem; padding-bottom: 0.75rem; }
+  .header-inner nav { flex-basis: auto; order: 0; margin-left: auto; }
+  .header-inner .cta-small { order: 0; margin-left: 0; }
+  .logo { font-size: 1.5rem; }
+  section.hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+    margin: 2rem calc(50% - min(36rem, 50vw - 1rem)) 0;   /* 72rem wide, never wider than the viewport less the gutters */
+  }
+  .hero .photo.hero { order: 1; margin: 0; }
+  .hero .photo.hero img, .hero .photo.hero .ph { aspect-ratio: 3 / 2; max-height: none; border-radius: 2px; }
+  .facts { grid-template-columns: repeat(6, auto); justify-content: space-between; gap: 1rem 1.5rem; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+  .cta, nav a, a { transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease; }
+  .faq-item summary::after { transition: transform 150ms ease; }
+}
+
+@media print {
+  .site-header nav, .cta-small, .skip { display: none; }
+  .hero .photo.hero { margin-left: 0; margin-right: 0; }
+  .ph { border: 1px solid #999; background: none; }
+  .faq-item summary::after { display: none; }
+}
+
+@supports not selector(:focus-visible) {
+  a:focus, summary:focus {
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
+  }
+}
