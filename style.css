@@ -249,6 +249,7 @@ section.hero { display: flex; flex-direction: column; }
 }
 .photo img { object-fit: cover; height: auto; }
 .photo.wide img, .photo.wide .ph { aspect-ratio: 16 / 10; }
+.photo.plan img { aspect-ratio: auto; object-fit: contain; background: #fff; } /* a drawing: never crop it */
 .photo.panorama img, .photo.panorama .ph { aspect-ratio: 16 / 9; } /* for 16:9 sources only */
 .ph {
   position: relative;
